@@ -52,7 +52,7 @@ jobs:
 
       - name: Evaluate score
         run: |
-          if [[ `echo "$score 0.50" | awk '{print ($1 > $2)}'` == 1 ]]; then
+          if (( $(echo "$score > 0.50" | bc -l) )); then
             echo "Score is greater than 0.50 "
           else
             echo "Score is not greater than 0.50"
