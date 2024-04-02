@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: docker push 
-        run: docker push siddkas3/cicd_test_v1:assgn3_v1
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1
   
   Test:
     needs: Train
@@ -43,16 +43,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Pull Docker image
-        run: docker pull siddkas3/cicd_test_v1:assgn3_v1
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1
 
       - name: Run Docker container
         run: |
-          score=$(docker run ${{ secrets.DOCKER_USERNAME }}/assgn3:latest | tail -1)
+          score=$(docker run ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1 | tail -1)
           echo "Test Score :$score"
 
       - name: Evaluate score
         run: |
-          if (( $(echo "$score > 0.50" | bc -l) )); then
+          if [[ `echo "$score 0.50" | awk '{print ($1 > $2)}'` == 1 ]]; then
             echo "Score is greater than 0.50 "
           else
             echo "Score is not greater than 0.50"
