@@ -45,13 +45,8 @@ jobs:
       - name: Pull Docker image
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1
 
-      - name: Run Docker container
+      - name: Run Docker container and evalute score
         run: |
           OUTPUT=$(docker run ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1)
-          echo "Test Score:$OUTPUT my"
-
-      - name: Evaluate score
-        run: |
-          echo "Score:"
-          echo "$OUTPUT"
+          echo "Test Score:$OUTPUT "
           if [[ `echo "$OUTPUT 0.50" | awk '{print ($1 < $2)}'` == 1 ]]; then echo "Insufficient Accuracy" && exit 1; fi
