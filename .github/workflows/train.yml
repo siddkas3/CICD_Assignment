@@ -47,14 +47,11 @@ jobs:
 
       - name: Run Docker container
         run: |
-          score=$(docker run ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1 | tail -1)
-          echo "Test Score :$score"
+          OUTPUT=$(docker run ${{ secrets.DOCKER_USERNAME }}/cicd_test_v1:assgn3_v1)
+          echo "Test Score:$OUTPUT my"
 
       - name: Evaluate score
         run: |
-          if (( $(echo "$score > 0.50" | bc -l) )); then
-            echo "Score is greater than 0.50 "
-          else
-            echo "Score is not greater than 0.50"
-            exit 1
-          fi
+          echo "Score:"
+          echo "$OUTPUT"
+          if [[ `echo "$OUTPUT 0.50" | awk '{print ($1 < $2)}'` == 1 ]]; then echo "Insufficient Accuracy" && exit 1; fi
